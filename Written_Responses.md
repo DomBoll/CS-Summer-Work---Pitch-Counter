@@ -9,11 +9,8 @@ I did not need any big arrays, lists, etc. for my program. The closest I got to 
 void addOut() {
 
 		ballsCurrent = 0;
-  
 		strikesCurrent = 0;
-  
 		outsCurrent++;
-  
 		if (bottomOfInning == true) awayPitcher.outsPitched++; else homePitcher.outsPitched++;
 		if (outsCurrent == 3) {
 			if (bottomOfInning == true) {
