@@ -12,7 +12,7 @@ public class Start {
 	public static void main(String[] args) {
 		
 		
-		JFrame initialWindow =new JFrame("Pitch Counter");  
+		JFrame initialWindow =new JFrame("Baseball Counter App");  
 	    initialWindow.setSize(1000,800);
 	    
 		

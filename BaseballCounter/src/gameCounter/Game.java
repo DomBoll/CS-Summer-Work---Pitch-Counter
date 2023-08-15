@@ -18,6 +18,9 @@ public class Game {
 	int outsCurrent = 0;
 	int pitchCount = 0;
 	int inning = 1;
+	int LastInning = 9;
+	int homeRuns = 0;
+	int awayRuns = 0;
 	boolean bottomOfInning = false;
 	Pitcher homePitcher = new Pitcher();
 	Pitcher awayPitcher = new Pitcher();
@@ -36,6 +39,7 @@ public class Game {
 	JButton buttonHit=new JButton("Hit");
 	JButton buttonRun=new JButton("Run");
 	JButton buttonOut=new JButton("Out");
+	JButton buttonNewPitcher = new JButton("New Pitcher");
 
 
 	
@@ -81,6 +85,7 @@ public class Game {
 	    buttonStrike.addActionListener(new ActionListener(){  
 	    	public void actionPerformed(ActionEvent e){ 
 	    				strikesCurrent++;
+	    				if (bottomOfInning == true) awayPitcher.strikes++; else homePitcher.strikes++;
 	    				addPitch();
 	    				if (strikesCurrent == 3) {
 	    						if (bottomOfInning == true) awayPitcher.strikeouts++; else homePitcher.strikeouts++;
@@ -98,6 +103,7 @@ public class Game {
 	    buttonBall.addActionListener(new ActionListener(){  
 	    	public void actionPerformed(ActionEvent e){
 	    				addPitch();
+	    				if (bottomOfInning == true) awayPitcher.balls++; else homePitcher.balls++;
 	    				ballsCurrent++;
 	    				if (ballsCurrent == 4) {
 	    					if (bottomOfInning == true) awayPitcher.walks++; else homePitcher.walks++;
@@ -140,7 +146,51 @@ public class Game {
 	    
 	    buttonRun.addActionListener(new ActionListener(){  
 	    	public void actionPerformed(ActionEvent e){ 
-	    				if (bottomOfInning == true) awayPitcher.runsAllowed++; else homePitcher.runsAllowed++;
+	    				if (bottomOfInning == true) {
+	    					awayPitcher.runsAllowed++;
+	    					homeRuns++; 
+	    					if (inning == LastInning && homeRuns > awayRuns) {
+	    						gameEnd();
+	    					}
+	    				} else {
+	    					homePitcher.runsAllowed++;
+	    					awayRuns++;
+	    				}
+	    				update();
+	        }  
+	    });
+	    
+	  //Pitching Change button
+	    buttonNewPitcher.setBounds(100,200,100,100);
+	    gameWindow.add(buttonNewPitcher);
+	    
+	    buttonNewPitcher.addActionListener(new ActionListener(){  
+	    	public void actionPerformed(ActionEvent e){ 
+	    				if (bottomOfInning == true) {
+	    					awayPitcher.print(); 
+	    					
+	    					awayPitcher.pitchingOrderNumber++;
+	    					awayPitcher.pitches = 0;
+	    					awayPitcher.walks = 0;
+	    					awayPitcher.strikeouts = 0;
+	    					awayPitcher.strikes = 0;
+	    					awayPitcher.balls = 0;
+	    					awayPitcher.hits = 0;
+	    					awayPitcher.runsAllowed = 0;
+	    					awayPitcher.outsPitched = 0;
+	    				} else {
+	    					homePitcher.print();
+
+	    					homePitcher.pitchingOrderNumber++;
+	    					homePitcher.pitches = 0;
+	    					homePitcher.walks = 0;
+	    					homePitcher.strikeouts = 0;
+	    					homePitcher.strikes = 0;
+	    					homePitcher.balls = 0;
+	    					homePitcher.hits = 0;
+	    					homePitcher.runsAllowed = 0;
+	    					homePitcher.outsPitched = 0;
+	    				}
 	    				update();
 	        }  
 	    });
@@ -152,8 +202,8 @@ public class Game {
 		labelStrikes.setText("Strikes: "+strikesCurrent);
 		labelBalls.setText("Balls: "+ballsCurrent);
 		labelOuts.setText("Outs: "+outsCurrent);
-		labelAwayRuns.setText(awayTeamName + ": " + homePitcher.runsAllowed);
-		labelHomeRuns.setText(homeTeamName + ": " + awayPitcher.runsAllowed);
+		labelAwayRuns.setText(awayTeamName + ": " + awayRuns);
+		labelHomeRuns.setText(homeTeamName + ": " + homeRuns);
 		if (bottomOfInning == true) {
 			labelInning.setText("Bottom "+inning);
 			labelPitchCount.setText("Pitches: "+awayPitcher.pitches);
@@ -174,22 +224,31 @@ public class Game {
 		ballsCurrent = 0;
 		strikesCurrent = 0;
 		outsCurrent++;
+		if (bottomOfInning == true) awayPitcher.outsPitched++; else homePitcher.outsPitched++;
 		if (outsCurrent == 3) {
 			if (bottomOfInning == true) {
-				if (inning == 9) {
-					System.out.println("Game ended");
-					homePitcher.print();
-					awayPitcher.print();
-					gameWindow.setVisible(false);
+				if (inning == LastInning) {
+					gameEnd();
 				}
 				bottomOfInning = false;
 				inning++;
 				outsCurrent = 0;
 			} else {
+				if (inning == LastInning && homeRuns > homeRuns) {
+					gameEnd();
+				}
 				bottomOfInning = true;
 				outsCurrent = 0;
 			};
 		}
+	}
+	
+	void gameEnd() {
+		System.out.println("------------------------------------");
+					System.out.println("Game ended");
+					homePitcher.print();
+					awayPitcher.print();
+					gameWindow.setVisible(false);
 	}
 	
 }
