@@ -7,9 +7,13 @@ I used the java swing tool to create windows, buttons, labels, and text boxes in
 I did not need any big arrays, lists, etc. for my program. The closest I got to that was for recording each pitcher's individual stats. This was done by having a ton of variables in the pitcher class rather than the game class, and then just making those variables public so that the game could easily enough reference them whenever they were needed. For example, I could have recorded the home pitcher's strikeouts and away pitcher's strikeouts each in the game class but that would have made for an unneccessary amount of complexity in the game class.
 
 void addOut() {
+
 		ballsCurrent = 0;
+  
 		strikesCurrent = 0;
+  
 		outsCurrent++;
+  
 		if (bottomOfInning == true) awayPitcher.outsPitched++; else homePitcher.outsPitched++;
 		if (outsCurrent == 3) {
 			if (bottomOfInning == true) {
